@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TagController;
+use App\Http\Controllers\QusetionController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\AnswerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +18,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/home');
 });
+Route::get('/home', function () {
+    return redirect()->route('qusetions.index');
+})->name('home');
+
+require __DIR__.'/auth.php';
+
+Route::resource('/tags',TagController::class);
+Route::resource('/qusetions',QusetionController::class);
+Route::resource('/comments',CommentController::class);
+Route::resource('/answers',AnswerController::class);

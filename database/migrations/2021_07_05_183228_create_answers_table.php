@@ -16,13 +16,11 @@ class CreateAnswersTable extends Migration
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
             $table->text('body');
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('question_id');
-            $table->foreignId('parent_id')->nullable()->constrained('answers', 'id')->nullOnDelete();
+            $table->foreignId('user_id')->constrained('users','id')->cascadeOnDelete();
+            $table->foreignId('question_id')->constrained('questions','id');
+            $table->boolean('accepted')->nullable();
+            $table->unsignedInteger('score')->default('0');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('question_id')->references('id')->on('questions');
         });
     }
 

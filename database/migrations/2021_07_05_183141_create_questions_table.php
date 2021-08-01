@@ -15,12 +15,14 @@ class CreateQuestionsTable extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title')->unique();
             $table->text('body');
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id')->constrained('users','id')->cascadeOnDelete();
+            $table->unsignedInteger('views')->default('0'); // 4294967295 (unsigned Int)
+            $table->unsignedInteger('score')->default('0');
+            $table->enum('status',['draft' ,'active']);
+            $table->boolean('solved')->default('0');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

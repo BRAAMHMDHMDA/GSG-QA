@@ -10,16 +10,21 @@ class Question extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'body', 'user_id',
+        'title', 'body', 'user_id', 'status'
     ];
 
     public function user()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function answers()
     {
-        $this->hasMany(Answer::class);
+       return $this->hasMany(Answer::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'question_tags', 'question_id', 'tag_id', 'id', 'id');
     }
 }
