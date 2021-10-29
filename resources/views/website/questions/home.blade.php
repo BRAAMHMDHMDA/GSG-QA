@@ -8,10 +8,10 @@
                 <div class="col-lg-2 pr-0">
                     <div class="sidebar position-sticky top-0 pt-40px">
                         <ul class="generic-list-item generic-list-item-highlight fs-15">
-                            <li class="lh-26"><a href="index.html"><i class="la la-home mr-1 text-black"></i> Home</a></li>
-                            <li class="lh-26 active"><a href="home-3.html"><i class="la la-globe mr-1 text-black"></i> Questions</a></li>
+                            <li class="lh-26"><a href="{{ route('home') }}"><i class="la la-home mr-1 text-black"></i> Home</a></li>
+                            <li class="lh-26 active"><a href="{{ route('qusetions.index') }}"><i class="la la-globe mr-1 text-black"></i> Questions</a></li>
                             <li class="lh-26"><a href="{{ route('tags.index') }}"><i class="la la-tags mr-1 text-black"></i> Tags</a></li>
-                            <li class="lh-26"><a href="user-list.html"><i class="la la-user mr-1 text-black"></i> Users</a></li>
+                            <li class="lh-26"><a href="{{ route('user.index') }}"><i class="la la-user mr-1 text-black"></i> Users</a></li>
                             <li class="lh-26"><a href="badges-list.html"><i class="la la-id-badge mr-1 text-black"></i> Badges</a></li>
                             <li class="lh-26"><a href="category-list.html"><i class="la la-sort mr-1 text-black"></i> Categories</a></li>
                             <li class="lh-26"><a href="job-list.html"><i class="la la-mouse mr-1 text-black"></i> Jobs</a></li>
@@ -49,29 +49,29 @@
                                             <span class="vote-text d-block fs-13 lh-18">votes</span>
                                         </div>
                                         <div class="answer-block answered my-2">
-                                            <span class="answer-counts d-block lh-20 fw-medium">3</span>
+                                            <span class="answer-counts d-block lh-20 fw-medium">{{$qusetion->answers_count}}</span>
                                             <span class="answer-text d-block fs-13 lh-18">answers</span>
                                         </div>
                                         <div class="view-block">
-                                            <span class="view-counts d-block lh-20 fw-medium">12</span>
+                                            <span class="view-counts d-block lh-20 fw-medium">{{$qusetion->views_count}}</span>
                                             <span class="view-text d-block fs-13 lh-18">views</span>
                                         </div>
                                     </div>
                                     <div class="media-body">
-                                        <h5 class="mb-2 fw-medium"><a href="{{ route('qusetions.show',$qusetion->id) }}">{{$qusetion->title}}</a></h5>
-                                        <p class="mb-2 truncate lh-20 fs-15">{{ $qusetion->body }}</p>
+                                        <h5 class="mb-2 fw-medium"><a href="{{ route('qusetions.show',$qusetion->slug) }}">{{$qusetion->title}}</a></h5>
+                                        <p class="mb-2 truncate lh-20 fs-15">{{ Str::limit($qusetion->body, 40, $end='...') }}</p>
                                         <div class="tags">
                                             @foreach($qusetion->tags as $tag)
-                                                <a href="#" class="tag-link">{{$tag->name}}</a>
+                                                <a href="{{$tag->permalink}}" class="tag-link">{{$tag->name}}</a>
                                             @endforeach
                                         </div>
                                         <div class="media media-card user-media align-items-center px-0 border-bottom-0 pb-0">
-                                            <a href="../user-profile.html" class="media-img d-block">
-                                                <img src="{{ asset('website_assets/images/img3.jpg') }}" alt="avatar">
+                                            <a href="{{route('user.show',$qusetion->user->id)}}" class="media-img d-block">
+                                                <img src="{{ $qusetion->user->full_image_path }}" alt="avatar">
                                             </a>
                                             <div class="media-body d-flex flex-wrap align-items-center justify-content-between">
                                                 <div>
-                                                    <h5 class="pb-1"><a href="../user-profile.html">{{$qusetion->user->name}}</a></h5>
+                                                    <h5 class="pb-1"><a href="{{route('user.show',$qusetion->user->id)}}">{{$qusetion->user->full_name}}</a></h5>
                                                     <div class="stats fs-12 d-flex align-items-center lh-18">
                                                         <span class="text-black pr-2" title="Reputation score">224</span>
                                                         <span class="pr-2 d-inline-flex align-items-center" title="Gold badge"><span class="ball gold"></span>16</span>

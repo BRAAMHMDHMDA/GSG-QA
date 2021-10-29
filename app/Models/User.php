@@ -17,9 +17,19 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
+        'address',
+        'image_path',
+        'about_me',
+        'website_link',
+        'github_link',
+        'twitter_link',
+        'facebook_link',
+        'instagram_link',
+        'youtube_link',
     ];
 
     /**
@@ -41,8 +51,42 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['full_name', 'full_image_path'];
+
+    public static function ValidateRules()
+    {
+        return [
+            'first_name' => 'required|string|min:3|max:255',
+            'last_name' => 'required|string|min:3|max:255',
+            'address' => 'nullable|string|min:3|max:255',
+            'about_me' => 'nullable',
+            'image' => 'nullable|image',
+            'website_link' => 'nullable|url',
+            'github_link' => 'nullable|url',
+            'twitter_link' => 'nullable|url',
+            'facebook_link' => 'nullable|url',
+            'instagram_link' => 'nullable|url',
+            'youtube_link' => 'nullable|url',
+        ];
+    }
+
     public function questions()
     {
-        $this->hasMany(Question::class);
+        return $this->hasMany(Question::class);
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return "$this->first_name $this->last_name";
+    }
+
+    public function getFullImagePathAttribute()
+    {
+        return asset('media/' . $this->image_path);
     }
 }

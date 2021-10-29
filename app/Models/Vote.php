@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
-class Vote extends Pivot
+class Vote extends Model
 {
-    protected $table = 'votes';
-    public $timestamps = false;
+    protected $guarded = [];
+//    protected $table = 'votes';
+//    public $timestamps = false;
+//    protected $fillable = [
+//        'score', 'voteable_id', 'voteable_type', 'user_id'
+//    ];
+
 
     public function user()
     {
@@ -16,6 +22,13 @@ class Vote extends Pivot
     public function answer()
     {
         return $this->belongsTo(Answer::class);
+    }
+
+    protected function setKeysForSaveQuery($query)
+    {
+        return $query->where('user_id', '=', $this->attributes['user_id'])
+            ->where('voteable_type', '=', $this->attributes['voteable_type'])
+            ->where('voteable_id', '=', $this->attributes['voteable_id']);
     }
 
 }

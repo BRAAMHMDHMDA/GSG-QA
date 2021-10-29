@@ -25,8 +25,9 @@
     <link rel="stylesheet" href="{{ asset('website_assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('website_assets/css/jquery-te-1.4.0.css') }}">
     <link rel="stylesheet" href="{{ asset('website_assets/css/upvotejs.min.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-    @stack('css').
+    @stack('css')
 <!-- end inject -->
 </head>
 <body>
@@ -44,7 +45,7 @@
 <!--======================================
         START HEADER AREA
     ======================================-->
-<header class="header-area bg-white shadow-sm" style="padding: 15px">
+<header class="header-area bg-white shadow-sm" style="padding: 10px">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-2">
@@ -62,14 +63,30 @@
             </div><!-- end col-lg-2 -->
             <div class="col-lg-10">
                 <div class="menu-wrapper border-left border-left-gray pl-4 justify-content-end">
+                    @if(!Route::is('qusetions.index'))
                     <nav class="menu-bar mr-auto menu--bar">
+                            <ul>
+                                <li>
+                                    <a href="#">Quick access <i class="la la-angle-down fs-11"></i></a>
+                                    <ul class="dropdown-menu-item">
+                                        <li><a href="{{route('home')}}"><i class="la la-home mr-1 text-black"></i> Home</a></li>
+                                        <li><a href="{{route('qusetions.index')}}"><i class="la la-globe mr-1 text-black"></i> Qusetions</a></li>
+                                        <li><a href="{{route('tags.index')}}"><i class="la la-tags mr-1 text-black"></i> Tags</a></li>
+                                        <li><a href="{{route('user.index')}}"><i class="la la-user mr-1 text-black"></i> Users</a></li>
+                                        {{--                                    <li><a href="{{route('tags.index')}}">Home - layout 2 <span class="badge bg-warning text-white">New</span></a></li>--}}
+                                    </ul>
+                                </li>
+                            </ul>
                     </nav><!-- end main-menu -->
-                    <form method="post" class="mr-2">
-                        <div class="form-group mb-0">
-                            <input class="form-control form--control h-auto py-2" type="text" name="search" placeholder="Type your search words...">
-                            <button class="form-btn" type="button"><i class="la la-search"></i></button>
-                        </div>
-                    </form>
+                    @endif
+                @if(Route::is('qusetions.index'))
+                        <form method="get" class="mr-2">
+                            <div class="form-group mb-0">
+                                <input class="form-control form--control h-auto py-2" type="text" name="search" value="{{request()->search}}" placeholder="Search By Question Title...">
+                                <button class="form-btn" type="submit"><i class="la la-search"></i></button>
+                            </div>
+                        </form>
+                    @endif
                     @auth
                         <div class="nav-right-button">
                             <ul class="user-action-wrap d-flex align-items-center">
@@ -129,7 +146,7 @@
                                     <a class="nav-link dropdown-toggle dropdown--toggle pl-2" href="#" id="userMenuDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <div class="media media-card media--card shadow-none mb-0 rounded-0 align-items-center bg-transparent">
                                             <div class="media-img media-img-xs flex-shrink-0 rounded-full mr-2">
-                                                <img src="{{ asset('website_assets/images/img4.jpg') }}" alt="avatar" class="rounded-full">
+                                                <img src="{{ Auth::user()->full_image_path }}" alt="avatar" class="rounded-full">
                                             </div>
                                             <div class="media-body p-0 border-left-0">
                                                 <h5 class="fs-14">{{ Auth::user()->name }}</h5>
@@ -137,14 +154,14 @@
                                         </div>
                                     </a>
                                     <div class="dropdown-menu dropdown--menu dropdown-menu-right mt-3 keep-open" aria-labelledby="userMenuDropdown">
-                                        <h6 class="dropdown-header">Hi, {{ Auth::user()->name }}</h6>
+                                        <h6 class="dropdown-header">Hi, {{ Auth::user()->full_name }}</h6>
                                         <div class="dropdown-divider border-top-gray mb-0"></div>
                                         <div class="dropdown-item-list">
-                                            <a class="dropdown-item" href="user-profile.blade.php"><i class="la la-user mr-2"></i>Profile</a>
-                                            <a class="dropdown-item" href="notifications.html"><i class="la la-bell mr-2"></i>Notifications</a>
-                                            <a class="dropdown-item" href="referrals.html"><i class="la la-user-plus mr-2"></i>Referrals</a>
-                                            <a class="dropdown-item" href="setting.html"><i class="la la-gear mr-2"></i>Settings</a>
-                                            <a class="dropdown-item" href="index.html"><i class="la la-power-off mr-2"></i>Log out</a>
+                                            <a class="dropdown-item" href="{{ route('user.show',Auth::id()) }}"><i class="la la-user mr-2"></i>Profile</a>
+                                            <a class="dropdown-item" href="{{route('user.edit',Auth::id())}}"><i class="la la-gear mr-2"></i>Settings</a>
+                                            <a class="dropdown-item" href="#"><i class="la la-bell mr-2"></i>Notifications</a>
+                                            <a class="dropdown-item" href="#"><i class="la la-user-plus mr-2"></i>Referrals</a>
+                                            <a class="dropdown-item" href="{{ route('logout') }}"><i class="la la-power-off mr-2"></i>Log out</a>
                                         </div>
                                     </div>
                                 </li>
@@ -272,9 +289,15 @@
 <script src="{{ asset('website_assets/js/owl.carousel.min.js') }}"></script>
 <script src="{{ asset('website_assets/js/selectize.min.js') }}"></script>
 <script src="{{ asset('website_assets/js/main.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.js-example-basic-multiple').select2();
+    });
+</script>
 @stack('scripts')
 
-
+<!-- template js files -->
 </body>
 
 <!-- Mirrored from techydevs.com/demos/themes/html/disilab-demo/disilab/home.blade.php by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 Jul 2021 10:18:48 GMT -->

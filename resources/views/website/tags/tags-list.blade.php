@@ -34,11 +34,11 @@
                             <div class="card card-item">
                                 <div class="card-body">
                                     <div class="tags pb-1">
-                                        <a href="#" class="tag-link tag-link-md tag-link-blue"># {{$tag->name}}</a>
+                                        <a href="{{route('tags.show',$tag->slug)}}" class="tag-link tag-link-md tag-link-blue"># {{$tag->name}}</a>
                                     </div>
                                     <div class="d-flex tags-info fs-14 pt-3 border-top border-top-gray mt-3">
-                                        <p class="pr-1 lh-18">21 questions</p>
-                                        <p class="lh-18">90 asked today, 53 this week</p>
+                                        <p class="pr-1 lh-18">{{$tag->questions_count}} questions</p>
+{{--                                        <p class="lh-18">90 asked today, 53 this week</p>--}}
                                     </div>
                                 </div><!-- end card-body -->
                             </div><!-- end card -->

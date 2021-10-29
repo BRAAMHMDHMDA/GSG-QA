@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Answer;
 use App\Models\Comment;
+use App\Models\Question;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -27,15 +30,19 @@ class CommentController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function store(Request $request,$type)
     {
-        //
+        if ($type == 'question') {
+            $model = Question::find($request->id);
+        } else if ($type == 'answer') {
+            $model = Answer::find($request->id);
+        }
+        $model->comments()->create([
+            'user_id' => Auth::id(),
+            'body' => $request->body,
+        ]);
+        return redirect()->route('qusetions.show',$request->question_slug);
     }
 
     /**

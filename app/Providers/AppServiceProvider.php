@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Answer;
+use App\Models\Question;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,6 +28,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        Relation::morphMap([
+            'question' => Question::class,
+            'answer' => Answer::class,
+        ]);
+
         Paginator::useBootstrap();
     }
 }

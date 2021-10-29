@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Question;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -11,10 +12,11 @@ class TagController extends Controller
 {
     public function index(Request $request)
     {
-        return view('website.tags-list')->with([
-            'tags' => Tag::when($request->name,function ($q) use($request){
-                $q->where('name','like', '%' .$request->name.'%');
+        return view('website.tags.tags-list')->with([
+            'tags' => Tag::withCount('questions')->when($request->name, function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->name . '%');
             })->latest()->paginate(12),
+
         ]);
     }
 
@@ -38,9 +40,15 @@ class TagController extends Controller
     }
 
 
-    public function show(Tag $tag)
+    public function show($slug)
     {
-        //
+
+        $tag = Tag::where('slug', $slug)->first();
+        $questions = $tag->questions()->withCount('answers')->latest()->paginate(10);
+        return view('website.tags.list-questions-of-tag')->with([
+            'tag' => $tag,
+            'questions' => $questions
+        ]);
     }
 
     public function edit(Tag $tag)
@@ -52,7 +60,7 @@ class TagController extends Controller
 
     public function update(Request $request, Tag $tag)
     {
-        $request->validate(['name' => 'required',Rule::unique('tags','name')->ignore($tag->id)]);
+        $request->validate(['name' => 'required', Rule::unique('tags', 'name')->ignore($tag->id)]);
         $tag->update($request->all());
 
         return redirect()->route('tags.index')->with([

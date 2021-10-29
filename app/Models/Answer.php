@@ -10,15 +10,24 @@ class Answer extends Model
     use HasFactory;
 
     protected $fillable = [
-        'body', 'parent_id', 'user_id', 'question_id',
+        'body', 'user_id', 'question_id',
     ];
 
     public function user()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
     public function question()
     {
-        $this->belongsTo(Question::class);
+       return $this->belongsTo(Question::class);
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable', 'commentable_type', 'commentable_id', 'id');
+    }
+    public function votes()
+    {
+        return $this->morphMany(Vote::class, 'voteable', 'voteable_type', 'voteable_id', 'id');
     }
 }

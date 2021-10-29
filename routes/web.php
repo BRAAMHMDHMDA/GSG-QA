@@ -1,10 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TagController;
-use App\Http\Controllers\QusetionController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\{
+    TagController,
+    QusetionController,
+    CommentController,
+    AnswerController,
+    UserController,
+    VoteController,
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +30,22 @@ Route::get('/home', function () {
 
 require __DIR__.'/auth.php';
 
-Route::resource('/tags',TagController::class);
-Route::resource('/qusetions',QusetionController::class);
-Route::resource('/comments',CommentController::class);
+Route::resource('/tags',TagController::class)->except('show');
+Route::get('/tags/{slug}',[TagController::class,'show'])->name('tags.show');
+
+Route::resource('/qusetions',QusetionController::class)->except('show');
+Route::get('/qusetions/{slug}',[QusetionController::class,'show'])->name('qusetions.show');
+
+
 Route::resource('/answers',AnswerController::class);
+Route::post('answer/accepted',[AnswerController::class,'accepted'])->name('answer.accepted');
+
+Route::resource('/user' , UserController::class);
+
+Route::post('comment/{type}', [CommentController::class, 'store'])
+    ->where('type', 'answer|question');
+//Route::resource('/comments',CommentController::class);
+
+Route::post('vote/{type}', [VoteController::class, 'store'])
+    ->where('type', 'answer|question');
+
